@@ -1,8 +1,8 @@
 "d1_databases": [
   {
-    "binding": "DB", // A valid JavaScript variable name
+    "binding": "DB",
     "database_name": "db",
-    "database_id": "1234", // Webflow Cloud will generate this for you once you deploy your app
-    "migrations_dir": "drizzles" // We'll create this directory later
+    "database_id": "1234",
+    "migrations_dir": "drizzles"
   }
 ]
